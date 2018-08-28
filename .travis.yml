@@ -4,7 +4,7 @@ services:
 env:
   global:
   - COMPOSE_VERSION=1.16.1
-  - IMAGE_NAME=pgalchemy/skynet-audit-service
+  - IMAGE_NAME=travis-demo/skynet-audit-service
   - ECR_HOST=123765137800.dkr.ecr.us-east-1.amazonaws.com
   - AWS_DEFAULT_REGION=us-east-1
  
