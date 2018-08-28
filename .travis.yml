@@ -15,7 +15,6 @@ before_install:
   -s`-`uname -m` > docker-compose
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
-- apt install python-pip
 - pip install --user awscli
 - export PATH=$PATH:$HOME/.local/bin
 install:
