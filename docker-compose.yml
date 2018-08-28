@@ -1,22 +1,40 @@
-version: '2'
+version: "3"
 services:
+  dynamodb:
+    image: dwmkerr/dynamodb
+    hostname: dynamodb
+    ports:
+      - "9000:8000"
+
   server:
-    image: node:6
-    command: 'npm run go'
-    working_dir: '/app'
-    volumes:
-      - ./:/app
-    depends_on:
-      - mongo
-    ports:
-      - '1337:1337'
+    build: .
+    image: pgalchemy/skynet-access-service 
+    command: ["./main"]
+    depends_on: 
+      - dynamodb
     environment:
-      - NODE_ENV=prod
-    links:
-      - mongo:mongodb
-  mongo:
-    image: mongo:latest
+      - AWS_ACCESS_KEY_ID=test_key
+      - AWS_SECRET_ACCESS_KEY=test_secret
+      - BIND_HOST=0.0.0.0
+      - PORT=8000
+      - DYNAMO_URL=http://dynamodb:8000
+      - DEBUG=notification-service:server
     ports:
-      - '127.0.0.1:27017:27017'
-    volumes:
-      - ./data/:/data/ 
+      - "8000:8000"
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile-build
+    image: pgalchemy/skynet-access-service-build
+    command: ["go", "test", "-cover", "./pkg/..."]
+    depends_on: 
+      - dynamodb 
+    environment:
+      - AWS_ACCESS_KEY_ID=test_key
+      - AWS_SECRET_ACCESS_KEY=test_secret
+      - BIND_HOST=0.0.0.0
+      - PORT=8000
+      - DYNAMO_URL=http://dynamodb:8000
+      - DEBUG=notification-service:server
+

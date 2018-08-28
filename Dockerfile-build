@@ -1,0 +1,15 @@
+# build stage
+FROM golang:1.9-alpine
+ARG GITHUB_TOKEN
+
+RUN apk --no-cache add git
+RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+RUN go get -u github.com/FiloSottile/gvt
+
+WORKDIR /go/src/github.com/pgalchemy/grs-access-service
+
+COPY . .
+
+RUN gvt restore
+
