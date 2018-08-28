@@ -7,7 +7,7 @@ env:
   - IMAGE_NAME=travis-demo/skynet-audit-service
   - ECR_HOST=123765137800.dkr.ecr.us-east-1.amazonaws.com
   - AWS_DEFAULT_REGION=us-east-1
- 
+  - TAG=Ec255wdwee
 before_install:
 - sudo apt-get update
 - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -22,7 +22,6 @@ before_install:
 install:
 - docker build -f Dockerfile .
 after_success:
-- export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
 - "$(aws ecr get-login --no-include-email)"
 - docker tag $IMAGE_NAME:latest $ECR_HOST/$IMAGE_NAME:latest
 - docker tag $IMAGE_NAME:latest $ECR_HOST/$IMAGE_NAME:$TAG
@@ -38,7 +37,7 @@ deploy:
   secret_access_key: "$AWS_SECRET_ACCESS_KEY"
   on:
     branch: master
-  bucket: skynet-tooling-pipelines-travis-stage
+  bucket: skynet-gg
   skip_cleanup: true
   region: us-east-1
   local_dir: out
