@@ -1,0 +1,47 @@
+sudo: required
+services:
+- docker
+env:
+  global:
+  - COMPOSE_VERSION=1.16.1
+  - IMAGE_NAME=pgalchemy/skynet-audit-service
+  - ECR_HOST=123765137800.dkr.ecr.us-east-1.amazonaws.com
+  - AWS_DEFAULT_REGION=us-east-1
+ 
+before_install:
+- sudo apt-get update
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+- curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+- apt install python-pip
+- pip install --user awscli
+- export PATH=$PATH:$HOME/.local/bin
+install:
+- docker-compose build --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} test
+- docker-compose build server
+script:
+- docker-compose run test
+after_success:
+- export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
+- "$(aws ecr get-login --no-include-email)"
+- docker tag $IMAGE_NAME:latest $ECR_HOST/$IMAGE_NAME:latest
+- docker tag $IMAGE_NAME:latest $ECR_HOST/$IMAGE_NAME:$TAG
+- docker push $ECR_HOST/$IMAGE_NAME:latest
+- docker push $ECR_HOST/$IMAGE_NAME:$TAG
+before_deploy:
+- printf '{"tag":"%s"}' $TAG > build.json
+- mkdir out
+- zip out/bundle.zip service.yml build.json
+deploy:
+- provider: s3
+  access_key_id: "$AWS_ACCESS_KEY_ID"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+  on:
+    branch: master
+  bucket: skynet-tooling-pipelines-travis-stage
+  skip_cleanup: true
+  region: us-east-1
+  local_dir: out
+  upload_dir: "$IMAGE_NAME"
