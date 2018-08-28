@@ -21,9 +21,9 @@ before_install:
 - pip install --user awscli
 - export PATH=$PATH:$HOME/.local/bin
 install:
-- docker build -t="mysql-server"
+- docker build -t -f Dockerfile .
 script:
-- docker run -i -t mysql-server
+- docker run -i -t Dockerfile
 after_success:
 - export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
 - "$(aws ecr get-login --no-include-email)"
