@@ -1,0 +1,22 @@
+version: '2'
+services:
+  server:
+    image: node:6
+    command: 'npm run go'
+    working_dir: '/app'
+    volumes:
+      - ./:/app
+    depends_on:
+      - mongo
+    ports:
+      - '1337:1337'
+    environment:
+      - NODE_ENV=prod
+    links:
+      - mongo:mongodb
+  mongo:
+    image: mongo:latest
+    ports:
+      - '127.0.0.1:27017:27017'
+    volumes:
+      - ./data/:/data/ 
