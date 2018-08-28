@@ -19,8 +19,7 @@ before_install:
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
 - pip install --user awscli
-- export PATH=$PATH:$HOME/.local/bin
-instal:
+install:
 - docker build -f Dockerfile .
 after_success:
 - export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
