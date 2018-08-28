@@ -21,7 +21,7 @@ before_install:
 - pip install --user awscli
 - export PATH=$PATH:$HOME/.local/bin
 install:
-- docker build -t -f Dockerfile .
+- docker build -t Dockerfile .
 script:
 - docker run -i -t Dockerfile
 after_success:
