@@ -21,9 +21,9 @@ before_install:
 - pip install --user awscli
 - export PATH=$PATH:$HOME/.local/bin
 install:
-- docker build -t Dockerfile .
+- docker build -f Dockerfile .
 script:
-- docker run -i -t Dockerfile
+- docker run -i -f Dockerfile
 after_success:
 - export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
 - "$(aws ecr get-login --no-include-email)"
