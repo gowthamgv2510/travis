@@ -23,7 +23,7 @@ before_install:
 install:
 - docker build -f Dockerfile .
 script:
-- docker run -f Dockerfile
+- docker run -i -t  Dockerfile
 after_success:
 - export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
 - "$(aws ecr get-login --no-include-email)"
