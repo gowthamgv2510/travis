@@ -21,10 +21,9 @@ before_install:
 - pip install --user awscli
 - export PATH=$PATH:$HOME/.local/bin
 install:
-- docker-compose build --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} test
-- docker-compose build server
+- docker build -t="mysql-server"
 script:
-- docker-compose run test
+- docker run -i -t mysql-server
 after_success:
 - export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
 - "$(aws ecr get-login --no-include-email)"
