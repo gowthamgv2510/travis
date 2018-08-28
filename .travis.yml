@@ -19,8 +19,9 @@ before_install:
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
 - pip install --user awscli
+
 install:
-- docker build -t Sampleapp .
+- docker build -t pg:1.0 .
 before_deploy:
 - printf '{"tag":"%s"}' $TAG > build.json
 - mkdir out
