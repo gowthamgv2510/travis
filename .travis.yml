@@ -22,8 +22,8 @@ before_install:
 - export PATH=$PATH:$HOME/.local/bin
 install:
 - docker build -f Dockerfile .
-script:
-- docker run -i /usr/sbin/mysqld -f Dockerfile
+#script:
+#- docker run -i /usr/sbin/mysqld -f Dockerfile
 after_success:
 - export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
 - "$(aws ecr get-login --no-include-email)"
