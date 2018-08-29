@@ -22,6 +22,7 @@ before_install:
   - export PATH=$PATH:$HOME/.local/bin
 install:
   - docker-compose build server
+#fsdasdfsf
 after_success:
   - export TAG="$(echo $TRAVIS_COMMIT | head -c 8)"
   - "$(aws ecr get-login --no-include-email)"
