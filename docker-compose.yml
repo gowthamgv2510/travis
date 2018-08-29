@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  dynamodb:
+    container_name: dynamodb
+    image: dwmkerr/dynamodb
+    hostname: dynamodb
+    ports:
+      - "8001:8000"
+  server:
+    build: .
+    image: pgalchemy/skynet-shorturl-service
+    command: ["./main"]
+    environment:
+      DEBUG: shorturl*
+      BIND_HOST: 0.0.0.0
+      PORT: 8000
+      DYNAMO_URL: http://dynamodb:8000
+      AWS_ACCESS_KEY_ID: foo
+      AWS_SECRET_ACCESS_KEY: bar
+    ports:
+      - "8000:8000"
+    depends_on:
+      - dynamodb
