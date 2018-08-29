@@ -20,6 +20,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
+#ldldl
 install:
   - docker-compose build server
 after_success:
